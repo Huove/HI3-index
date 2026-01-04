@@ -1,0 +1,10 @@
+.main {
+    padding: 40px;
+    max-width: auto;
+    margin: 0 auto;
+    font-family: sans-serif;
+  }
+
+::-webkit-scrollbar {
+  display: none;
+}
