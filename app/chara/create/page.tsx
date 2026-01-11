@@ -48,7 +48,7 @@ export default function CreateChara() {
         <section className="w-full max-w-xl mx-auto pt-20">
             <img src="/chara_bg.jpg" className="absolute inset-0 w-full h-full object-cover" />
             <form className="mt-6 space-y-4 bg-black/70 backdrop-blur rounded-xl p-6 shadow-xl shadow-black/70" onSubmit={handleSubmit}>
-                <h2 className="text-2xl md:text-3xl font-semibold text-purple-200">Add Character</h2>
+                <h2 className="text-2xl md:text-3xl font-semibold text-purple-200">Add Battlesuit</h2>
                 {errorMSG && <p className="text-red-500">{errorMSG}</p>}
                 <Input label="Nama Chara" name="nama_chara" onChange={handleChange} />
                 <Input label="Karakteristik" name="karakteristik_chara" onChange={handleChange}/>
