@@ -1,13 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { supabase } from './utils/supabase';
 import styles from './page.module.css';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
   const [chara, setChara] = useState<any[]>([]);
   const [equipment, setEquipment] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,22 +32,24 @@ export default function Home() {
     fetchData();
   }, []);
 
+
+
   const handleDelete = async (id: number, table: string) => {
-    const {error} = await supabase
+    const { error } = await supabase
       .from(table)
       .delete()
       .eq('id', id);
 
-      if (error) {
-        alert('Delete failed: ' + error.message);
-      } else {
-        if (table === 'chara') {
-          setChara(prev => prev.filter(item => item.id !== id));
-        }
-        if (table === 'equipment') {
-          setEquipment(prev => prev.filter(item => item.id !== id));
-        }
+    if (error) {
+      alert('Delete failed: ' + error.message);
+    } else {
+      if (table === 'chara') {
+        setChara(prev => prev.filter(item => item.id !== id));
       }
+      if (table === 'equipment') {
+        setEquipment(prev => prev.filter(item => item.id !== id));
+      }
+    }
   };
   if (loading) {
     return <div>Processing..</div>;
@@ -60,7 +64,7 @@ export default function Home() {
         loop
         playsInline
       >
-        <source src="/Loading-sc.mp4" type="video/mp4" />
+        <source src="/iuno_bg.mp4" type="video/mp4" />
       </video>
 
       <main className={styles.main} style={{ color: 'white', position: 'relative', zIndex: 10, display: 'flex', justifyContent: 'center', gap: '60px', padding: '40px' }}>
@@ -68,7 +72,10 @@ export default function Home() {
           minWidth: '45%', backgroundColor: 'rgba(10, 10, 10, 0.75)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(255,255,255,0.1)', overflowY: 'auto', maxHeight: '90vh',
         }}
         >
-          <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Character List</h2>
+          <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Battlesuit List</h2>
+          <div className="mb-4 flex">
+            <button onClick={() => router.push('/chara/create')} className="bg-green-500 text-white font-bold py-2 px-4 rounded-sm">Add New Battlesuit</button>
+          </div>
           <ul style={{ listStyleType: 'none', padding: 0 }}>
             {chara.map((item) => (
               <li key={item.id}
@@ -89,11 +96,14 @@ export default function Home() {
                   />
                 )}
                 <div>
-                  <p>Nama Chara: {item.nama_chara}</p>
+                  <p>Battlesuit: {item.nama_chara}</p>
                   <p>Karakteristik: {item.karakteristik_chara}</p>
                   <p>Gender: {item.gender_chara}</p>
                   <p>Type: {item.type_chara}</p>
-                  <button onClick={() => handleDelete(item.id, 'chara')} className='bg-red-600 text-white font-bold py-2 px-4 rounded-sm' style={{marginTop: '10px', cursor: 'pointer'}}>Delete</button>
+                  <div className='flex gap-5 mt-3'>
+                    <button onClick={() => handleDelete(item.id, 'chara')} className='bg-red-600 text-white font-bold py-2 px-4 rounded-sm' style={{ marginTop: '10px', cursor: 'pointer' }}>Delete</button>
+                    <button onClick={() => router.push(`/chara/edit/${item.id}`)} className='bg-blue-600 text-white font-bold py-2 px-4 rounded-sm' style={{ marginTop: '10px', cursor: 'pointer' }}>Edit</button>
+                  </div>
                 </div>
               </li>
             ))}
@@ -106,6 +116,9 @@ export default function Home() {
           }}
         >
           <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Weapon List</h2>
+          <div className='mb-4 flex'>
+            <button onClick={() => router.push('equipment/create')} className='bg-green-500 text-white font-blod py-2 px-4 rounded-sm'>Add New Equipment</button>
+          </div>
           <ul style={{ listStyleType: 'none', padding: 0 }}>
             {equipment.map((item) => (
               <li key={item.id}
@@ -129,7 +142,10 @@ export default function Home() {
                 <p>Base Atk: {item.base_atk_weap}</p>
                 <p>Base Crit: {item.base_crit_weap}</p>
                 <p>Skill: {item.skill_senjata_weap}</p>
-                <button onClick={() => handleDelete(item.id, 'chara')} className='bg-red-600 text-white font-bold py-2 px-4 rounded-sm' style={{marginTop: '10px', cursor: 'pointer'}}>Delete</button>
+                <div className='flex gap-5 mt-3'>
+                  <button onClick={() => handleDelete(item.id, 'equipment')} className='bg-red-600 text-white font-bold py-2 px-4 rounded-sm' style={{ marginTop: '10px', cursor: 'pointer' }}>Delete</button>
+                  <button onClick={() => router.push(`/equipment/edit/${item.id}`)} className='bg-blue-600 text-white font-bold py-2 px-4 rounded-sm' style={{ marginTop: '10px', cursor: 'pointer' }}>Edit</button>
+                </div>
               </li>
             ))}
           </ul>
